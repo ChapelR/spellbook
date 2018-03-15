@@ -1,0 +1,35 @@
+:: StoryInterface [nobr]
+<div id='top-bar'>
+    <div id='ui-buttons'>
+        <span id='ui-search' class='ui-button'>
+            <span class='icon'></span>
+        </span>
+        <span id='ui-lists' class='ui-button'>
+            <span class='icon'></span>
+        </span>
+        <span id='ui-about' class='ui-core'>
+            <span class='icon'></span>
+        </span>
+        <span id='ui-settings' class='ui-core'>
+            <span class='icon'></span>
+        </span>
+        <span id='ui-data' class='ui-core'>
+            <span class='icon'></span>
+        </span>
+        <!-- <span id='ui-restart' class='ui-core'>
+            <span class='icon'></span>
+        </span> -->
+    </div>
+</div>
+<div id='caption'>
+    <div id='caption-text'></div>
+    <div id='caption-link'></div>
+</div>
+<div id='story'>
+    <div id='passages'>
+    </div>
+</div>
+<!--<div id='bottom-bar'></div>
+<div id='bumper'>
+    <span id='bumper-body'>
+</div>-->

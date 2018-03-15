@@ -1,0 +1,37 @@
+/* patch for mobile browsers */
+
+html {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: transparent;
+}
+
+/*fonts*/
+
+@font-face {
+    font-family: base;
+    src: url("assets/fonts/base.ttf");
+}
+
+@font-face {
+    font-family: rob;
+    src: url("assets/fonts/rob.ttf");
+}
+
+@font-face {
+font-family: rob-m;
+src: url("assets/fonts/rob-m.ttf");
+font-size: 22px;
+}
+
+/* base styles */
+body {
+    font-family: base, Verdana, Geneva, sans-serif; /* use the included font, falling back to web-safe */
+}
+
+.hide {
+    display: none
+}
+
+a.link-external:after {
+    content: none;
+}

@@ -1,0 +1,160 @@
+/* font options */
+html.small {
+    font-size: 14px;
+}
+html.small #top-bar {
+    font-size: 16px;
+}
+html.small #caption {
+    font-size: 16px;
+}
+
+html.large {
+    font-size: 18px;
+}
+html.large #top-bar {
+    font-size: 16px;
+}
+html.large #caption {
+    font-size: 16px;
+}
+
+html.very-large {
+    font-size: 20px;
+}
+html.very-large #top-bar {
+    font-size: 16px;
+}
+html.very-large #caption {
+    font-size: 16px;
+}
+
+/* light theme */
+html.light body {
+    background-color: #eee;
+    color: #111;
+}
+
+html.light #ui-dialog-body, html.light #bumper {
+    color: #eee;
+    background-color: #111
+}
+
+html.light #notify {
+    border: 1px solid #111;
+    border-right: 0;
+}
+
+html.light #top-bar, html.light #bottom-bar {
+    background-color: #555;
+    border-color: #222;
+}
+
+html.light #caption {
+    background-color: #111;
+    color: #eee;
+    border-color: #333;
+}
+
+html.light #caption:hover {
+    background-color: #000;
+}
+
+html.light #caption:hover #caption-link {
+    color: #f00;
+}
+
+html.light #menu-heading {
+    border-color: #111;
+}
+
+html.light #main-hub img:hover {
+    background: #111;
+}
+
+html.light #main-hub img {
+    border-radius: 10px;
+}
+
+html.light #select-avatar img:hover {
+    background: #111;
+}
+
+html.light #select-avatar img {
+    border-radius: 10px;
+}
+
+html.light #story button { 
+    color: #fff;
+    background-color: #ee82ee;
+    border: 1px solid #9400d3;
+}
+
+html.light #story button:hover {
+    background-color: #9400d3;
+    border-color: #9400d3;
+}
+
+html.light #story button:disabled {
+    background-color: #ccc;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+html.light #story a {
+    color: #9400d3;
+}
+
+html.light #story a:hover {
+    color: #f0f;
+}
+
+html.light #story a.link-broken {
+    color: #c22;
+}
+
+html.light #story a.link-broken:hover {
+    color: #e44;
+}
+
+html.light #story span.link-disabled{
+    color: #aaa; 
+}
+
+html.light #ui-dialog-title {
+    color: #eee;
+}
+
+html.light #debug-bar {
+    color: #eee;
+}
+
+html.light .message-text {
+    color: #3D9970;
+}
+
+html.light .message-text.open {
+    border-color: #111;
+}
+
+html.light #story .message-text button, html.light #story .message-text.open button { background-color: #3D9970; }
+html.light #story .message-text button:hover, html.light #story .message-text.open button:hover { background-color: #01FF70; color: #111 }
+
+html.light input[type=text], html.light select {
+    color: #111;
+    background-color: #fff;
+}
+
+html.light select:hover, html.light select:focus {
+    border-color: #fff;
+    color: #111;
+    background-color: #fff;
+}
+
+html.light input:hover, html.light input:focus {
+    
+}
+
+html.light input#gender-slider:focus, html.light input#gender-slider:hover {
+    background-color: #fff;
+}

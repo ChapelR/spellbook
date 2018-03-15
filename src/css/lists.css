@@ -1,0 +1,50 @@
+/* lists styling */
+
+.spell-wrapper {
+    padding: 1em;
+    overflow: hidden;
+    border: 4px outset #555;
+    background: #222;
+    margin: 1em 0;
+    cursor: pointer;
+}
+.spell-wrapper:hover {
+    background-color: #111;
+}
+.spell-wrapper:active {
+    border: 4px inset #555;
+    background-color: #111;
+}
+.spell-name {
+    display: block;
+    font-weight: bold;
+    margin: 0 2em;
+}
+.spell-type {
+    display: block;
+    margin: 0 2em;
+    padding-left: 1em;
+    font-style: italic;
+}
+.spell-classes {
+    display: block;
+    margin: 0 2em;
+    padding-left: 1em;
+}
+.add-link, .delete-link {
+    width: 100%;
+    margin-top: 1em;
+    text-align: center;
+}
+
+html.light .spell-wrapper {
+    border-color: #ccc;
+    background-color: #fff;
+}
+html.light .spell-wrapper:hover {
+    background-color: #ddd;
+}
+html.light .spell-wrapper:active {
+    border-color: #ccc;
+    background-color: #ccc;
+}

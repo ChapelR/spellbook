@@ -1,0 +1,17 @@
+/* the modal boxes for spells */
+
+.descr-type {
+    display: block;
+    max-width: 30em;
+    text-align: center;
+}
+.descr-heading {
+    display: block;
+    max-width: 30em;
+    border: 2px solid #ddd;
+    padding: 1em;
+}
+.descr-main {
+    display: block;
+    max-width: 30em;
+}

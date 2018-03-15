@@ -1,0 +1,33 @@
+/* menus.css */
+
+#menu-heading {
+    display: block;
+    border-bottom: 1px solid #eee;
+}
+
+#menu-text {
+    font-size: 130%;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 0.7em;
+}
+
+#menu-icon {
+    margin-right: 0.5em;
+}
+
+#menu-icon img {
+    height: 2em;
+    width: 2em;
+    border: 1px solid #ccc;
+}
+
+.big-link {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.big-link button, button.npc-action-link {
+    width: 60%;
+    margin: 0.5em 10em;
+}

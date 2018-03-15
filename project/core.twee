@@ -1,0 +1,14 @@
+:: StoryTitle
+Spellbook
+
+:: StorySettings
+ifid:b0c5ca7d-2dfd-4491-a21a-7694a83cb8e6
+
+:: Start
+<center>\
+Welcome to Spellbook!  Use the menu options above to get started, or [[view all the spells|AllSpells]].
+</center>
+
+:: AllSpells
+<span id='do-me'></span>
+<<timed 40ms>><<run $('#do-me').append(spells.render.listAll())>><</timed>>

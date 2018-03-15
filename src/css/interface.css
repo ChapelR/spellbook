@@ -1,0 +1,139 @@
+/* base interface */
+#story {
+    margin: 5em 10em;
+}
+#passages {
+    padding-left: 3em;
+    padding-right: 3em;
+    padding-top: 2em;
+}
+
+/* caption menu */
+
+#caption {
+    position: fixed;
+    display: block;
+    left: -13em; top: 0; bottom: 0;
+    margin-top: 5em;
+    margin-bottom: 0;
+    padding: 2em 1em;
+    width: 10em;
+    background: #eee;
+    color: #111;
+    border-right: 2px solid #fff;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 10;
+    -webkit-transition-duration : 0.3s;
+	-moz-transition-duration : 0.3s;
+	-o-transition-duration : 0.3s;
+	transition-duration : 0.3s;
+}
+
+#caption-text {
+    font-size: 125%;
+    font-weight: bold;
+    text-transform: capitalize;
+    transform: rotate(5deg);
+    letter-spacing: 0.1em;
+}
+
+#caption-link {
+    position: relative;
+    bottom: -6em;
+    font-size: 265%;
+    font-weight: bold;
+    text-transform: uppercase;
+    transform: rotate(275deg);
+    letter-spacing: 0.5em;
+}
+
+#caption:hover {
+    background: #fff;
+}
+
+#caption:hover #caption-link {
+    color: #b22222;
+}
+
+#caption.open {
+    left: 0;
+}
+
+/* top bar */
+#top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 5em;
+    width: 100%;
+    background-color: #222;
+    color: #fff;
+    border-bottom: 2px solid #000;
+    overflow: hidden;
+    text-align: center;
+    z-index: 50;
+}
+
+.ui-button, .ui-core {
+    display: inline-block;
+    margin: 1em;
+    height: 3em;
+    width: 3em;
+    background-color: #fff;
+    border: 3px outset #333;
+}
+
+.ui-button:hover, .ui-core:hover {
+    border: 3px inset #333;
+}
+
+.ui-button .icon:hover, .ui-core .icon:hover {
+    opacity: 0.7;
+}
+
+.ui-button .icon, .ui-core .icon {
+    display: block;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* menu icons */
+#ui-search .icon {
+    background: url('assets/images/search.svg');
+}
+
+#ui-lists .icon {
+    background: url('assets/images/lists.svg');
+}
+
+#ui-about .icon {
+    background: url('assets/images/about.svg');
+}
+
+#ui-settings .icon {
+    background: url('assets/images/settings.svg');
+}
+
+#ui-data .icon {
+    background: url('assets/images/data.svg');
+}
+
+#ui-restart .icon {
+    background: url('assets/images/restart.svg');
+}
+
+/* bottom bar */
+
+#bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 1em;
+    width: 100%;
+    background-color: #222;
+    color: #eee;
+    border-top: 2px solid #000;
+    overflow: hidden;
+    text-align: center;
+    z-index: 50;
+}
