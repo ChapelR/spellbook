@@ -1,14 +1,5 @@
 function createSpellDescription (spellObj) {
-    return `<span class='descr-type'>//${spellObj.type.toLowerCase()}//</span>
-        <div class='descr-heading'>\
-        ''Casting Time:'' ${spellObj.casting_time}
-        ''Range:'' ${spellObj.range}
-        ''Classes:'' ${spellObj.classes.join(', ')}
-        ''Components:'' ${spellObj.components.raw}
-        ''Duration:'' ${spellObj.duration} 
-        </div><div class='descr-main'>
-        ${spellObj.description}
-        ${(spellObj.hasOwnProperty('higher_levels')) ? '\n' + spellObj.higher_levels + '\n' : ''}</div>`;
+    return "<span class='descr-type'>//" + spellObj.type.toLowerCase() + "//</span><br /><div class='descr-heading'><br />''Casting Time:'' " + spellObj.casting_time + "<br />''Range:'' " + spellObj.range + "<br />''Classes:'' " + spellObj.classes.join(', ') + "<br />''Components:'' " + spellObj.components.raw + "<br />''Duration:'' " + spellObj.duration + " <br /></div><div class='descr-main'><br />" + spellObj.description + "<br />" + ((spellObj.hasOwnProperty('higher_levels')) ? ('<br />' + spellObj.higher_levels + '<br />') : '') + "</div>";
 }
 
 function createSpellDescriptionLink (spellObj, el) {
