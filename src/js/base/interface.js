@@ -160,6 +160,7 @@ $('#ui-lists').ariaClick({ label : 'Your spell books.' }, function () {
 });
 $('#ui-all').ariaClick({ label : 'All spells.' }, function () {
     State.variables.results = spells.get.sort(spells.list);
+    State.variables.listName = 'All Spells';
     Engine.play('Results');
 });
 

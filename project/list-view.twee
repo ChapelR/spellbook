@@ -1,9 +1,11 @@
 :: Results [list-view]
 <<set _filtered to []>>\
+/% additional info (like book name if applicable)%/\
+<span id='menu-heading'>@@#menu-icon;[img[assets/images/all.svg]]@@ @@#menu-text;$listName@@</span>
 <span id='results'></span>
 <<nobr>>
     <<if $results.length > 0>>
-        <<timed 40ms>><<run spells.render.load('#results', function () { return spells.render.listAll($results); })>><</timed>>
+        <<run spells.render.load(false, '#results', function () { return spells.render.listAll($results); })>>
     <<else>>
         <<timed 40ms>>
             <<replace '#results'>>No spells match the criteria.<</replace>>
@@ -57,7 +59,7 @@
         <<notify>>No spells match the criteria.<</notify>>
         <<replace '#results'>>No spells match the criteria.<</replace>>
     <<else>>
-        <<run spells.render.load('#results', function () { return spells.render.listAll(_filtered); })>>
+        <<run spells.render.load(true, '#results', function () { return spells.render.listAll(_filtered); })>>
     <</if>>
     <<run Dialog.close()>>
 <</button>></span>

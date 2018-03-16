@@ -87,19 +87,38 @@ function toElement (el) {
     return (typeof el === 'string') ? $(el) : el;
 }
 
-function wrapAndRender (target, fn) {
-    // show a loading animation if the list takes too long
-    var $target = toElement(target), 
-        $content;
+function wrapAndRender (sync, target, fn) {
     
-    // give the target the loading element
-    setup.loading.show(); // attaches to #story and covers it
+    function renderMe () {
+        var $target = toElement(target), 
+            $content;
+        
+        // give the target the loading element
+        setup.loading.show(); // attaches to #story and covers it
+        
+        if (typeof fn === 'function') {
+            $content = fn(); // run the function
+        }
+        $target.empty().append($content);
+        setTimeout(setup.loading.dismiss, 0);
+    } 
     
-    if (typeof fn === 'function') {
-        $content = fn(); // run the function
+    if (sync) {
+        renderMe();
+    } else {
+        postdisplay['render-content'] = function (t) {
+            delete postdisplay[t];
+            renderMe();
+        };
     }
-    $target.empty().append($content);
-    setTimeout(setup.loading.dismiss, 0);
+}
+
+function loadNav (target, fn) {
+    wrapAndRender(false, target, fn);
+}
+
+function loadNow (target, fn) {
+    wrapAndRender(true, target, fn);
 }
 
 window.spells.render = {
@@ -108,5 +127,7 @@ window.spells.render = {
     addLink : createSpellAddLink,
     listing : createSpellListing,
     listAll : renderListOfSpells,
-    load : wrapAndRender
+    load : wrapAndRender,
+    loadNow : loadNow,
+    loadNav : loadNav
 };

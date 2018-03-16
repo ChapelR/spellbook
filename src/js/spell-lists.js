@@ -76,7 +76,14 @@ SpellList.listify = function (list) {
 };
 
 SpellList.render = function (el, list) {
-    spells.render.load(el, function () {
+    spells.render.load(false, el, function () {
+        return SpellList.listify(list);
+    });
+};
+
+SpellList.update = function (el, list) {
+    spells.render.load(true, el, function () {
+        // for when search is added
         return SpellList.listify(list);
     });
 };
@@ -109,10 +116,10 @@ SpellList.prototype = {
             .addClass('book-listing card-edit-btn')
             .attr('data-book', inst.name)
             .wiki(' [ standin edit button ] ')
-            .on('click', function () {
+            .ariaClick({ label : 'Change spell book information.' }, function () {
                 State.temporary.bookToEdit = inst.name;
                 State.temporary.spellToAdd = false;
-                Dialog.setup('Edit', 'edit-book');
+                Dialog.setup('Edit Spellbook', 'edit-book');
                 Dialog.wiki(Story.get('Edit').text);
                 Dialog.open();
             });
@@ -121,9 +128,12 @@ SpellList.prototype = {
             .addClass('book-listing card')
             .attr('data-book', inst.name)
             .append($name, $tags, $edit)
-            .on('click', function () {
-                console.log(inst);
+            .ariaClick({ label : 'View spell book.' }, function (e) {
+                if ($(e.target).hasClass('card-edit-btn')) {
+                    return;
+                }
                 State.variables.results = inst.spells;
+                State.variables.listName = 'Spell Book: ' + inst.name;
                 Engine.play('Results');
             });
         

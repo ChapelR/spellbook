@@ -40,3 +40,10 @@
     width: 100%;
     margin: 0.5em 0;
 }
+
+#search {
+    color: #555;
+}
+#search:focus {
+    color: #111;
+}

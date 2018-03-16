@@ -1,17 +1,17 @@
 :: Lists [spells]
 <span id='menu-heading'>@@#menu-icon;[img[assets/images/lists.svg]]@@ @@#menu-text;Spell Books@@</span>
-<span id='book-list'></span><<timed 40ms>><<run SpellList.render('#book-list', $lists)>><</timed>>
+<span id='book-list'></span><<run SpellList.render('#book-list', $lists)>>
 
 :: Edit [dialog]
 <<nobr>>
     <<set _defaults to { name : '', tags : '' },
         _setName to '', _setTags to ''>>
     <<if _bookToEdit>>
-        ''Edit Spellbook''
-        <<set _index to SpellList.getByName(_bookToEdit)[1]>>
-        <<set _defaults to { name : }>>
+        ''Rename Your Spellbook''
+        <<set _inst to SpellList.getByName(_bookToEdit, true)>>
+        <<set _defaults to { name : _inst.name, tags : _inst.tags.join(' ') }>>
     <<else>>
-        ''New Spellbook''
+        ''Name Your New Spellbook''
     <</if>>
 <</nobr>>
 
@@ -21,17 +21,17 @@ Name:
 Tags: 
 <<textarea '_setTags' _defaults.tags>>
 
-<<button 'Confirm'>>
+<span id='enter-link'><<button 'Confirm'>>
     <<if !_setName.trim()>>
         <<replace '#errors'>>//Please enter a name.//<</replace>>
     <<else>>
-        <<if _setTags.trim()>>
+        <<if _setTags && _setTags.trim()>>
             <<set _setTags to _setTags.trim().split(' ')>>
         <<else>>
             <<set _setTags to []>>
         <</if>>
         <<if _bookToEdit>>
-            <<run $lists[_index].rename(_setName, _setTags)>>
+            <<run _inst.rename(_setName, _setTags)>>
         <<else>>
             <<if _spellToAdd>>
                 <<set _spell to [_spellToAdd]>>
@@ -42,5 +42,5 @@ Tags:
         <</if>>
         <<run Engine.play(passage()), Dialog.close()>>
     <</if>>
-<</button>>
+<</button>></span>
 <span id='errors'></span>

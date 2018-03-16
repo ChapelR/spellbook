@@ -4,8 +4,13 @@ Spellbook
 :: StorySettings
 ifid:b0c5ca7d-2dfd-4491-a21a-7694a83cb8e6
 
+:: StoryInit
+<<set $results to spells.get.sort(spells.list)>>
+<<set $listName to 'All Spells'>>
+
 :: Start
 <<set $results to spells.get.sort(spells.list)>>\
+<<set $listName to 'All Spells'>>\
 !!!Your Spellbooks:
 <span id='books'></span><span id='list-link'>
 <span class='w100-link'><<button [[See all of your spellbooks.|Lists]]>><</button>></span></span>
@@ -13,7 +18,8 @@ ifid:b0c5ca7d-2dfd-4491-a21a-7694a83cb8e6
     <<timed 40ms>>
         <<if $listOfLists.length < 1>>\
             <<replace '#books'>>...Or not.  Why don't you <<link 'create one'>>
-                blah
+                <<set _spellToAdd to false, _bookToEdit to false>>
+                <<popup 'Edit' 'New SpellBook' 'new-book'>>
             <</link>>?<</replace>>
             <<replace '#list-link'>><</replace>>
         <<elseif $listOfLists.length < 3>>\
@@ -27,7 +33,7 @@ ifid:b0c5ca7d-2dfd-4491-a21a-7694a83cb8e6
 !!!Some random spells to keep you company:
 <<set _list to spells.list.randomMany(3)>>\
 <span id='random-spells'></span>
-<<timed 40ms>><<run spells.render.load('#random-spells', function () { return spells.render.listAll(_list); })>><</timed>>\
+<<run spells.render.load(false, '#random-spells', function () { return spells.render.listAll(_list); })>>\
 <span class='w100-link'><<button [[See all spells.|Results]]>><</button>></span>
 
 :: About [dialog]

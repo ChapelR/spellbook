@@ -8,6 +8,11 @@
     padding-top: 2em;
 }
 
+textarea {
+    min-width: 18em;
+    width: 18em;
+}
+
 /* caption menu */
 
 #caption {
