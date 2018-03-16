@@ -99,8 +99,8 @@
 }
 
 /* menu icons */
-#ui-search .icon {
-    background: url('assets/images/search.svg');
+#ui-all .icon {
+    background: url('assets/images/all.svg');
 }
 
 #ui-lists .icon {
@@ -128,12 +128,16 @@
 #bottom-bar {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    height: 1em;
+    height: 3em;
     width: 100%;
     background-color: #222;
     color: #eee;
     border-top: 2px solid #000;
     overflow: hidden;
     text-align: center;
-    z-index: 50;
+    z-index: 10;
+}
+
+#search {
+    margin-top: 0.5em;
 }

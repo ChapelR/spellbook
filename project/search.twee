@@ -1,5 +1,5 @@
 :: Search [search]
-<span id='menu-heading'>@@#menu-icon;[img[assets/images/search.svg]]@@ @@#menu-text;Search for Spells@@</span>
+<span id='menu-heading'>@@#menu-icon;[img[assets/images/search.svg]]@@ @@#menu-text;Filter Spells@@</span>
 <<nobr>>
     <<set _term to ''>>
     <<set _classList to ['any', 'bard', 'cleric', 'druid', 'paladin', 'ranger', 'sorcerer', 'warlock', 'wizard']>>
@@ -12,29 +12,26 @@
     <<set _school to 'any'>>
     <<set _ritual to false>>
 <</nobr>>\
-<center>\
+<center>/%
 ''Spell name:''
 <<textbox '_term' ''>>
 
-''Class:''
+%/''Class:''
 <<dropdown '_class' _classList>>
 
 ''Level:''
 <<dropdown '_level' _levelList>>
 
-<<link 'Advanced Filters'>><<dialog 'Advanced'>>
-    ''Components:''
+/%    ''Components:''
 * <label>Verbal: <<checkbox '_components[0]' false true checked>></label>
 * <label>Somatic: <<checkbox '_components[1]' false true checked>></label>
 * <label>Material: <<checkbox '_components[2]' false true checked>></label>
 
-    ''School:''
+%/    ''School:''
         <<dropdown '_school' _schoolList>>
         
     ''Ritual:''
 * <label>Only Rituals: <<checkbox '_ritual' false true>></label>
-
-<</dialog>><</link>>
 
 <span class='big-link' id='space-link'><<button 'Go' 'Results'>>
     <<set $results to clone(spells.list)>>
@@ -67,17 +64,3 @@
     <</if>>
 <</button>></span>
 </center>
-
-:: Results
-<span id='results'></span>
-<<nobr>>
-    <<if $results.length > 0>>
-        <<timed 40ms>>
-            <<run $('#results').append(spells.render.listAll($results))>>
-        <</timed>>
-    <<else>>
-        <<timed 40ms>>
-            <<replace '#results'>>No spells matched the criteria.<</replace>>
-        <</timed>>
-    <</if>>
-<</nobr>>

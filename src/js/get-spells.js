@@ -13,15 +13,44 @@ function clean (str) {
     return ret;
 }
 
+function compare (a, b) {
+    if (clean(a.name) < clean(b.name)) {
+        return -1;
+    }
+    if (clean(a.name) > clean(b.name)) {
+        return 1;
+    }
+    return 0;
+}
+
+function sortList (list, term) {
+    if (term) {
+        var first = [], others = [];
+        for (var i = 0; i < list.length; i++) {
+            if (clean(list[i].name).indexOf(term) === 0) {
+                first.push(list[i]);
+            } else {
+                others.push(list[i]);
+            }
+        }
+        first = sortList(first);
+        others = sortList(others);
+        return first.concat(others);
+    }
+    var ret = clone(list);
+    return ret.sort(compare);
+    
+}
+
 function getSpellsByName (name, list) {
     // return array of matching spells with similar names
     list = getList(list);
     
     name = clean(name);
-    return list.filter( function (spellObj, idx, arr) {
+    return sortList(list.filter( function (spellObj, idx, arr) {
         var spellName = clean(spellObj.name);
         return spellName.includes(name);
-    });
+    }), name);
 }
 
 function getSpellsByTag (tagName, list) {
@@ -29,10 +58,10 @@ function getSpellsByTag (tagName, list) {
     list = getList(list);
     
     tagName = clean(tagName);
-    return list.filter( function (spellObj, idx, arr) {
+    return sortList(list.filter( function (spellObj, idx, arr) {
         var spellTags = spellObj.tags;
-        return spellTags.includes(tagName)
-    });
+        return spellTags.includes(tagName);
+    }));
 }
 
 function getSpellsByLevel (level, list) {
@@ -62,7 +91,7 @@ function getSpellsByComponent (compArray, list) {
         console.warn('Invalid component array in getSpellsByComponent().');
         return list;
     }
-    return list.filter( function (spellObj, idx, arr) {
+    return sortList(list.filter( function (spellObj, idx, arr) {
         var spellComp = spellObj.components;
         var ret = [];
         compArray.forEach( function (comp) {
@@ -76,7 +105,7 @@ function getSpellsByComponent (compArray, list) {
             return false;
         }
         return true;
-    });
+    }));
 }
 
 function getSpellsBySchool (school, list) {
@@ -85,23 +114,25 @@ function getSpellsBySchool (school, list) {
     if (!school) {
         return list;
     }
-    return list.filter( function (spellObj, idx, arr) {
+    return sortList(list.filter( function (spellObj, idx, arr) {
         var spellSchool = spellObj.school;
         return school === spellSchool;
-    });
+    }));
 }
 
 function getSpellsByRitual (list) {
     list = getList(list);
     
-    return list.filter( function (spellObj, idx, arr) {
+    return sortList(list.filter( function (spellObj, idx, arr) {
         return spellObj.ritual;
-    });
+    }));
 }
 
 // exports
 window.spells.get = {
+    cleanText : clean,
     checkList : getList,
+    sort : sortList,
     byName : getSpellsByName,
     byTag : getSpellsByTag,
     byLevel : getSpellsByLevel,

@@ -1,7 +1,7 @@
 :: StoryInterface [nobr]
 <div id='top-bar'>
     <div id='ui-buttons'>
-        <span id='ui-search' class='ui-button'>
+        <span id='ui-all' class='ui-button'>
             <span class='icon'></span>
         </span>
         <span id='ui-lists' class='ui-button'>
@@ -29,7 +29,7 @@
     <div id='passages'>
     </div>
 </div>
-<!--<div id='bottom-bar'></div>
-<div id='bumper'>
+<div id='bottom-bar'></div>
+<!--<div id='bumper'>
     <span id='bumper-body'>
 </div>-->

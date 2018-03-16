@@ -23,10 +23,19 @@ function createSpellAddLink (spellObj) {
             .attr('tabindex', '0')
             .wiki('Confirm')
             .ariaClick( function () {
-                var sel = State.temporary.selected,
-                    list = SpellList.getByName(sel);
-                Dialog.close();
-                list.addSpell(spellObj);
+                var st = State.temporary,
+                    sel = st.selected;
+                if (sel === 'New book...') {
+                    st.bookToEdit = false;
+                    st.spellToAdd = spellObj;
+                    Dialog.setup('New Spellbook', 'new-book');
+                    Dialog.wiki(Story.get('Edit').text);
+                    Dialog.open();
+                } else {
+                    var list = SpellList.getByName(sel);
+                    Dialog.close();
+                    list.addSpell(spellObj);
+                }
             });
     }
     
@@ -36,7 +45,7 @@ function createSpellAddLink (spellObj) {
         .wiki('Add')
         .ariaClick({ label : 'Add this spell to a list.' }, function () {
             Dialog.setup('Add Spell', 'add-selection');
-            Dialog.wiki('Add to which list?<br /><br /><<dropdown "_selected" $listOfLists>><br /><br />');
+            Dialog.wiki('Add to which list?<br /><br /><<dropdown "_selected" "New book..." $listOfLists>><br /><br />');
             Dialog.append(confirmButton());
             Dialog.open();
         });
@@ -74,10 +83,30 @@ function renderListOfSpells (list) {
     return $wrapper;
 }
 
+function toElement (el) {
+    return (typeof el === 'string') ? $(el) : el;
+}
+
+function wrapAndRender (target, fn) {
+    // show a loading animation if the list takes too long
+    var $target = toElement(target), 
+        $content;
+    
+    // give the target the loading element
+    setup.loading.show(); // attaches to #story and covers it
+    
+    if (typeof fn === 'function') {
+        $content = fn(); // run the function
+    }
+    $target.empty().append($content);
+    setTimeout(setup.loading.dismiss, 0);
+}
+
 window.spells.render = {
     spellDescr : createSpellDescription,
     descrLink : createSpellDescriptionLink,
     addLink : createSpellAddLink,
     listing : createSpellListing,
-    listAll : renderListOfSpells
+    listAll : renderListOfSpells,
+    load : wrapAndRender
 };

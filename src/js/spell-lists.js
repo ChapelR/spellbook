@@ -1,10 +1,11 @@
 State.variables.lists = [];
 State.variables.listOfLists = [];
 
-window.SpellList = function (name, spellArray) {
+window.SpellList = function (name, tags, spellArray) {
     if (this instanceof SpellList) {
         this.name = name;
-        this.spells = spellArray;
+        this.tags = tags || [];
+        this.spells = spellArray || [];
     } else {
         return new SpellList(name, spellArray);
     }
@@ -31,6 +32,19 @@ SpellList.getByName = function (name, includeIndex) {
     return inst;
 };
 
+SpellList.search = function (term, list) {
+    // search by name and tags
+    var sv = State.variables;
+    term = setup.get.cleanText(term);
+    if (!list || !Array.isArray(list) || list.length < 1 || !SpellList.is(list[0])) {
+        list = State.variables.lists;
+    }
+    return setup.get.sortList(list.filter( function (list) {
+        var check = list.name + list.tags.join(' ');
+        return check.includesAny(term.split(' '));
+    }));
+};
+
 SpellList.del = function (name) {
     var sv = State.variables,
         del = SpellList.getByName(name, true)[1];
@@ -46,26 +60,91 @@ SpellList.del = function (name) {
     sv.listOfLists.deleteAt(del[1]);
 };
 
-SpellList.render = function (inst) {
-    // render an entire list with all the trimmings
-    return inst.renderList();
+SpellList.listify = function (list) {
+    // render all spell book cards in a filtered or non-filtered list
+    if (!list || !Array.isArray(list) || list.length < 1 || !SpellList.is(list[0])) {
+        list = State.variables.lists;
+    }
+    var $wrapper = $((document).createElement('span'))
+        .addClass('book-wrapper');
+    
+    list.forEach( function (book) {
+        $wrapper.append(book.listing());
+    });
+    
+    return $wrapper;
+};
+
+SpellList.render = function (el, list) {
+    spells.render.load(el, function () {
+        return SpellList.listify(list);
+    });
 };
 
 SpellList.prototype = {
     
-    rename : function (newName) {
+    listing : function () {
+        var inst = this;
+        
+        var displayName = inst.name, 
+            displayTags = inst.tags;
+        if (displayName.length > 15) {
+            displayName.length = 20;
+            displayName = displayName += '...';
+        }
+        if (displayTags.length > 30) {
+            displayTags.length = 30;
+            displayTags = displayTags += '...';
+        }
+        
+        var $name = $(document.createElement('div'))
+            .addClass('book-listing card-name')
+            .append(displayName); // to ensure no markup
+        
+        var $tags = $(document.createElement('div'))
+            .addClass('book-listing card-tags')
+            .append(displayTags);
+            
+        var $edit = $(document.createElement('div'))
+            .addClass('book-listing card-edit-btn')
+            .attr('data-book', inst.name)
+            .wiki(' [ standin edit button ] ')
+            .on('click', function () {
+                State.temporary.bookToEdit = inst.name;
+                State.temporary.spellToAdd = false;
+                Dialog.setup('Edit', 'edit-book');
+                Dialog.wiki(Story.get('Edit').text);
+                Dialog.open();
+            });
+        
+         var $card = $(document.createElement('div'))
+            .addClass('book-listing card')
+            .attr('data-book', inst.name)
+            .append($name, $tags, $edit)
+            .on('click', function () {
+                console.log(inst);
+                State.variables.results = inst.spells;
+                Engine.play('Results');
+            });
+        
+        return $card;
+    },
+    
+    rename : function (newName, newTags) {
         // rename a list
         var sv = State.variables,
             i = sv.listOfLists.indexOf(this.name);
         
         sv.listOfLists[i] = newName;
         this.name = newName;
+        this.tags = newTags;
     },
     
     hasSpell : function (spellObj) {
         // bug: only works once!!!
         var ret = false;
-        this.spells.forEach( function (obj) {
+        var list = clone(this.spells);
+        list.forEach( function (obj) {
             if (spellObj.name === obj.name) {
                 ret = true;
             }
@@ -171,11 +250,11 @@ SpellList.prototype = {
     // for SugarCube's state system
     constructor : window.SpellList,
     toJSON : function () {
-        return JSON.reviveWrapper('new SpellList(' + this.name + ', ' + JSON.stringify(this.spells));
+        return JSON.reviveWrapper('new SpellList(' + this.name + ', ' + JSON.stringify(this.tags) + ',' + JSON.stringify(this.spells));
     },
     clone : function () {
-        return new SpellList(this.name, this.spells);
+        return new SpellList(this.name, this.tags, this.spells);
     }
 };
 
-SpellList.add('default', [spells.list[0], spells.list[10]]);
+// SpellList.add('default', [spells.list[0], spells.list[10]]);

@@ -1,0 +1,63 @@
+:: Results [list-view]
+<<set _filtered to []>>\
+<span id='results'></span>
+<<nobr>>
+    <<if $results.length > 0>>
+        <<timed 40ms>><<run spells.render.load('#results', function () { return spells.render.listAll($results); })>><</timed>>
+    <<else>>
+        <<timed 40ms>>
+            <<replace '#results'>>No spells match the criteria.<</replace>>
+        <</timed>>
+    <</if>>
+<</nobr>>
+
+:: Filter [dialog]
+<<nobr>>
+    <<set _term to ''>>
+    <<set _levelList to ['any', 'cantrip', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th']>>
+    <<set _level to 'any'>>
+    <<set _schoolList to ['any', 'abjuration', 'conjuration', 'divination', 'enchantment', 'evocation', 'illusion', 'necromancy', 'transmutation']>>
+    <<set _school to 'any'>>
+    <<set _componentList to ['verbal', 'somatic', 'material']>>
+    <<set _components to [true, true, true]>>
+<</nobr>>\
+
+''Level:''
+<<dropdown '_level' _levelList>>
+
+''School:''
+<<dropdown '_school' _schoolList>>
+
+/%''Components:''
+* <label>Verbal: <<checkbox '_components[0]' false true checked>></label>
+* <label>Somatic: <<checkbox '_components[1]' false true checked>></label>
+* <label>Material: <<checkbox '_components[2]' false true checked>></label>
+
+%/<span id='space-link'><<button 'Confirm'>>
+    <<set _filtered to clone($results)>>
+    <<set _level to _levelList.indexOf(_level) - 1>>
+    <<if _level >= 0>>
+        <<set _filtered to spells.get.byLevel(_level, _filtered)>>
+    <</if>>
+    <<if _school !== 'any'>>
+        <<set _filtered to spells.get.bySchool(_school, _filtered)>>
+    <</if>>
+    <<if _components.includes(false)>>
+        <<set _comp to []>>
+        <<for _i to 0; _i < _componentList.length; _i++>>
+            <<if _components[_i]>>
+                <<run _comp.push(_componentList[_i])>>
+            <</if>>
+        <</for>>
+        <<if _comp.length > 0>>
+            <<set _filtered to spells.get.byComponent(_comp, _filtered)>>
+        <</if>>
+    <</if>>
+    <<if _filtered.length < 1>>
+        <<notify>>No spells match the criteria.<</notify>>
+        <<replace '#results'>>No spells match the criteria.<</replace>>
+    <<else>>
+        <<run spells.render.load('#results', function () { return spells.render.listAll(_filtered); })>>
+    <</if>>
+    <<run Dialog.close()>>
+<</button>></span>

@@ -27,7 +27,16 @@
     text-align: center;
 }
 
-.big-link button, button.npc-action-link {
+.big-link button {
     width: 60%;
     margin: 0.5em 10em;
+}
+
+.w100-link {
+    text-align: center;
+}
+
+.w100-link button {
+    width: 100%;
+    margin: 0.5em 0;
 }

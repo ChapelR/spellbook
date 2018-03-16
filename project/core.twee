@@ -5,10 +5,38 @@ Spellbook
 ifid:b0c5ca7d-2dfd-4491-a21a-7694a83cb8e6
 
 :: Start
-<center>\
-Welcome to Spellbook!  Use the menu options above to get started, or [[view all the spells|AllSpells]].
-</center>
+<<set $results to spells.get.sort(spells.list)>>\
+!!!Your Spellbooks:
+<span id='books'></span><span id='list-link'>
+<span class='w100-link'><<button [[See all of your spellbooks.|Lists]]>><</button>></span></span>
+<<silently>>
+    <<timed 40ms>>
+        <<if $listOfLists.length < 1>>\
+            <<replace '#books'>>...Or not.  Why don't you <<link 'create one'>>
+                blah
+            <</link>>?<</replace>>
+            <<replace '#list-link'>><</replace>>
+        <<elseif $listOfLists.length < 3>>\
+            Show all spell books.
+        <<else>>
+            Show three random books.
+        <</if>>
+    <</timed>>
+<</silently>>\
 
-:: AllSpells
-<span id='do-me'></span>
-<<timed 40ms>><<run $('#do-me').append(spells.render.listAll())>><</timed>>
+!!!Some random spells to keep you company:
+<<set _list to spells.list.randomMany(3)>>\
+<span id='random-spells'></span>
+<<timed 40ms>><<run spells.render.load('#random-spells', function () { return spells.render.listAll(_list); })>><</timed>>\
+<span class='w100-link'><<button [[See all spells.|Results]]>><</button>></span>
+
+:: About [dialog]
+<div id='about-main'>\
+    Programmed by Chapel.
+</div><div id='about-tools'>
+    Powered by [[Twine|http://twinery.org/]], [[Tweego|http://www.motoslave.net/tweego/]], and [[SugarCube|http://www.motoslave.net/sugarcube/]].
+</div><div id='about-licenses'>
+    This application and its code are released under the [[Unlicense|http://unlicense.org/]].
+    
+    For licenses for the supporting software and content, [[click here|https://github.com/ChapelR/spellbook/tree/master/licenses]].
+</div>

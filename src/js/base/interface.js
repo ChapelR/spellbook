@@ -78,7 +78,8 @@ function captionSetup (tag, title, content) {
 postdisplay['caption-link'] = function (t) {
     setup.caption.close();
     captionSetup('search', 'search', 'Return');
-    captionSetup('spells', 'books', 'return');
+    captionSetup('spells', 'books', 'create');
+    captionSetup('list-view', 'list', 'filter');
 };
 
 function whatCaption (cls) {
@@ -92,7 +93,16 @@ $('#caption').ariaClick( function (e) {
     if (whatCaption('search')) {
         Engine.play('Start');
     } else if (whatCaption('spells')) {
-        Engine.play('Start');
+        State.temporary.bookToEdit = false;
+        State.temporary.spellToAdd = false;
+        Dialog.setup('New Spellbook', 'new-book');
+        Dialog.wiki(Story.get('Edit').text);
+        Dialog.open();
+    } else if (whatCaption('list-view')) {
+        Dialog.setup('Filter', 'list-view-filter');
+        Dialog.wiki(Story.get('Filter').text);
+        Dialog.open();
+        $('#search').val('Search...');
     }
 });
 
@@ -142,12 +152,56 @@ $('#ui-settings').ariaClick({ label : 'Configure settings.' }, function () {
 });
 $('#ui-about').ariaClick({ label : 'About.' }, function () {
     Dialog.setup('About', 'about-dialog');
-    Dialog.wiki( Story.get('about').text );
+    Dialog.wiki( Story.get('About').text );
     Dialog.open();
 });
 $('#ui-lists').ariaClick({ label : 'Your spell books.' }, function () {
     Engine.play('Lists');
 });
-$('#ui-search').ariaClick({ label : 'Search and filter spells.' }, function () {
-    Engine.play('Search');
+$('#ui-all').ariaClick({ label : 'All spells.' }, function () {
+    State.variables.results = spells.get.sort(spells.list);
+    Engine.play('Results');
 });
+
+/* bottom bar */
+var $search = $(document.createElement('input'))
+    .attr({
+        'id' : 'search',
+        'type' : 'text',
+        'value' : 'Search...'
+    })
+    .addClass('list-view-terms')
+    .on('focus', function () {
+        var $el = $(this);
+        if (!$el.val() || $el.val() === 'Search...') {
+            $el.val('');
+        }
+    })
+    .on('blur', function () {
+        var $el = $(this);
+        if (!$el.val()) {
+            $el.val('Search...');
+        }
+    })
+    .on('input', function () {
+        var term = $(this).val(),
+            st = State.temporary,
+            sv = State.variables,
+            list = (st.filtered.length > 0) ? st.filtered : sv.results;
+        var result = spells.get.byName(term, list);
+        if (result.length > 0) {
+            $('#results').empty().append(spells.render.listAll(result));
+        } else {
+            $('#results').empty().wiki('No spells match the criteria.');
+        }
+    });
+
+$('#bottom-bar').append($search).hide();
+
+postdisplay['show-search-bar'] = function (t) {
+    if (tags().includes('list-view')) {
+        $('#bottom-bar').show();
+    } else {
+        $('#bottom-bar').hide();
+    }
+};

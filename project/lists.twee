@@ -1,2 +1,46 @@
 :: Lists [spells]
 <span id='menu-heading'>@@#menu-icon;[img[assets/images/lists.svg]]@@ @@#menu-text;Spell Books@@</span>
+<span id='book-list'></span><<timed 40ms>><<run SpellList.render('#book-list', $lists)>><</timed>>
+
+:: Edit [dialog]
+<<nobr>>
+    <<set _defaults to { name : '', tags : '' },
+        _setName to '', _setTags to ''>>
+    <<if _bookToEdit>>
+        ''Edit Spellbook''
+        <<set _index to SpellList.getByName(_bookToEdit)[1]>>
+        <<set _defaults to { name : }>>
+    <<else>>
+        ''New Spellbook''
+    <</if>>
+<</nobr>>
+
+Name: 
+<<textbox '_setName' _defaults.name autofocus>>
+
+Tags: 
+<<textarea '_setTags' _defaults.tags>>
+
+<<button 'Confirm'>>
+    <<if !_setName.trim()>>
+        <<replace '#errors'>>//Please enter a name.//<</replace>>
+    <<else>>
+        <<if _setTags.trim()>>
+            <<set _setTags to _setTags.trim().split(' ')>>
+        <<else>>
+            <<set _setTags to []>>
+        <</if>>
+        <<if _bookToEdit>>
+            <<run $lists[_index].rename(_setName, _setTags)>>
+        <<else>>
+            <<if _spellToAdd>>
+                <<set _spell to [_spellToAdd]>>
+            <<else>>
+                <<set _spell to []>>
+            <</if>>
+            <<run SpellList.add(_setName, _setTags, _spell)>>
+        <</if>>
+        <<run Engine.play(passage()), Dialog.close()>>
+    <</if>>
+<</button>>
+<span id='errors'></span>
