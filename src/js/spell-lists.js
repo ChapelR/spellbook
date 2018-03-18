@@ -115,7 +115,6 @@ SpellList.prototype = {
         var $edit = $(document.createElement('div'))
             .addClass('book-listing card-edit-btn')
             .attr('data-book', inst.name)
-            .wiki(' [ standin edit button ] ')
             .ariaClick({ label : 'Change spell book information.' }, function () {
                 State.temporary.bookToEdit = inst.name;
                 State.temporary.spellToAdd = false;
@@ -260,7 +259,7 @@ SpellList.prototype = {
     // for SugarCube's state system
     constructor : window.SpellList,
     toJSON : function () {
-        return JSON.reviveWrapper('new SpellList(' + this.name + ', ' + JSON.stringify(this.tags) + ',' + JSON.stringify(this.spells) + ')');
+        return JSON.reviveWrapper('new SpellList(' + JSON.stringify(this.name) + ', ' + JSON.stringify(this.tags) + ',' + JSON.stringify(this.spells) + ')');
     },
     clone : function () {
         return new SpellList(this.name, this.tags, this.spells);
