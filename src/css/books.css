@@ -1,0 +1,36 @@
+/* spellbook list styling */
+
+div.book-listing.card {
+    border: 1px solid #111;
+    background-color: #fff;
+    padding: 1em;
+    margin: 0 2em;
+}
+div.book-listing.card:hover {
+    background-color: #111;
+    color: #eee;
+}
+div.book-listing.card:hover card-name {
+    text-decoration: underline;
+}
+
+.card-name {
+    font-weight: bold;
+    padding-right: 4em;
+}
+.card-tags {
+    font-style: italic;
+    padding-left: 1em;
+    padding-right: 4em;
+}
+div.book-listing.card-edit-btn {
+    cursor: pointer;
+    position: relative;
+    bottom: 4em; right: -1em;
+    float: right;
+    z-index: 3;
+    background: url('assets/images/edit.svg');
+    width: 4em;
+    height: 4em;
+    overflow: hidden;
+}

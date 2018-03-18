@@ -94,13 +94,13 @@ SpellList.prototype = {
         var inst = this;
         
         var displayName = inst.name, 
-            displayTags = inst.tags;
-        if (displayName.length > 15) {
-            displayName.length = 20;
+            displayTags = inst.tags.join(' ');
+        if (displayName.length > 30) {
+            displayName = displayName.substr(0, 28);
             displayName = displayName += '...';
         }
-        if (displayTags.length > 30) {
-            displayTags.length = 30;
+        if (displayTags.length > 100) {
+            displayTags = displayTags.substr(0, 98);
             displayTags = displayTags += '...';
         }
         
@@ -260,7 +260,7 @@ SpellList.prototype = {
     // for SugarCube's state system
     constructor : window.SpellList,
     toJSON : function () {
-        return JSON.reviveWrapper('new SpellList(' + this.name + ', ' + JSON.stringify(this.tags) + ',' + JSON.stringify(this.spells));
+        return JSON.reviveWrapper('new SpellList(' + this.name + ', ' + JSON.stringify(this.tags) + ',' + JSON.stringify(this.spells) + ')');
     },
     clone : function () {
         return new SpellList(this.name, this.tags, this.spells);

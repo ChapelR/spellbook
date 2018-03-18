@@ -129,7 +129,7 @@ $(document).on('keyup', function (e) {
             $('#space-link button, #space-link a').trigger('click');
         }
     } else if (e.which == 13) { // enter
-        $('#enter-link button, #enter-link a').trigger('click');
+        $('#enter-link button, #enter-link a').focus().trigger('click');
     }
 });
 
