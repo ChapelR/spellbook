@@ -88,3 +88,8 @@ function importSpellbook (data /* string */) {
         UI.alert('Something went wrong.  Error code: [iguana].');
     }
 }
+
+setup.share = {
+    importFromString : importSpellbook,
+    exportToString : exportSpellbook
+};

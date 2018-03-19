@@ -245,13 +245,12 @@ SpellList.prototype = {
     
     exportList : function () {
         // for sharing
-        return JSON.stringify(this.spells);
+        return setup.exportSpellbook(this);
     },
     
-    importList : function (name, enc) {
-        // to get it into your app; needs a name, though
-        SpellList.add(name, JSON.parse(enc));
-        return State.variables.lists[name];
+    importList : function () {
+        // to get it into your app
+        setup.importSpellbook(enc);
     },
     
     // for SugarCube's state system

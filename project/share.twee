@@ -1,0 +1,30 @@
+:: Share [dialog]
+Would you like to export or import spellbooks?
+
+<span class='big-link'><<button [[Export]]>><</button>>
+<<button [[Import]]>><</button>></span>
+
+
+:: Export [share-view]
+<span id='menu-heading'>@@#menu-icon;[img[assets/images/data.svg]]@@ @@#menu-text;Export Spellbooks@@</span>
+<<set _export to ''>>\
+''Select a spellbook:''
+<<dropdown '_export' $listOfLists>>
+
+<textarea id='share-output' readonly></textarea>
+<span class='big-link'><<button 'Select All'>>
+
+<</button>>
+<<button 'Copy to Clipboard'>>
+
+<</button>></span>
+
+::Import [share-view]
+<span id='menu-heading'>@@#menu-icon;[img[assets/images/data.svg]]@@ @@#menu-text;Import Spellbooks@@</span>
+
+<textarea id='share-output'></textarea>
+
+<span class='big-link'><<button 'Import'>>
+    /% import from textarea and offer chance to edit the list %/
+<</button>></span>
+
