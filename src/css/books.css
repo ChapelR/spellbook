@@ -2,10 +2,11 @@
 
 div.book-listing.card {
     cursor: pointer;
-    border: 1px solid #111;
-    background-color: #fff;
+    color: #111;
+    border: 1px solid #ccc;
+    background-color: #bbb;
     padding: 1em;
-    margin: 0 2em;
+    margin: 1em;
 }
 div.book-listing.card:hover {
     background-color: #ccc;
@@ -16,6 +17,9 @@ div.book-listing.card:hover .card-name {
 
 .card-name, .card-tags {
     padding-right: 4em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .card-name {
@@ -49,6 +53,11 @@ div.book-listing.card-edit-btn:hover {
     opacity: 1;
     border-left: 1.8em solid #111;
 }
-div.book-listing.card-edit-btn:after {
-    content: '[EDIT]';
+
+html.light .book-listing.card {
+    border-color: #111;
+    background-color: #fff;
+}
+html.light .book-listing.card:hover {
+    background-color: #ccc;
 }

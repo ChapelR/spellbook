@@ -1,0 +1,51 @@
+/*#ui-menu {
+    display: none;
+}
+
+#right-menu {
+    z-index: 20;
+    font-weight: bold;
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 18em;
+    background: #ccc;
+    padding-top: 5em;
+    padding-bottom: 3em;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#right-menu.hidden {
+    display: none;
+}
+#right-menu.closed {
+    width: 3em;
+}
+#right-menu.closed #right-menu-wrapper {
+    display: none;
+}
+
+#right-menu-wrapper {
+    display: block;
+    width: 100%;
+    margin: 0; padding: 0;
+}
+.menu-item {
+    list-style: none;
+}
+.menu-item a, html.light .menu-item a {
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.5em;
+    border-bottom: 1px solid #eee;
+    margin: 0 auto;
+    color: #111 !important;
+}
+.menu-item a:hover, html.light .menu-item a:hover {
+    background-color: #eee;
+    color: #111 !important;
+    text-decoration: none;
+}*/

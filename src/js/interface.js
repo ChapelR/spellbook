@@ -159,6 +159,7 @@ $('#ui-lists').ariaClick({ label : 'Your spell books.' }, function () {
     Engine.play('Lists');
 });
 $('#ui-all').ariaClick({ label : 'All spells.' }, function () {
+    $('#story').attr('data-ctx', '');
     State.variables.results = spells.get.sort(spells.list);
     State.variables.listName = 'All Spells';
     Engine.play('Results');
@@ -188,10 +189,24 @@ var $search = $(document.createElement('input'))
         var term = $(this).val(),
             st = State.temporary,
             sv = State.variables,
-            list = (st.filtered.length > 0) ? st.filtered : sv.results;
+            inst, mainList, list;
+        
+        if (sv.ctx) {
+            inst = SpellList.getByName(sv.ctx);
+            mainList = inst.spells;
+        } else {
+            inst = null;
+            mainList = sv.results;
+        }
+        
+        list = (st.filtered.length > 0) ? st.filtered : mainList;
         var result = spells.get.byName(term, list);
         if (result.length > 0) {
-            $('#results').empty().append(spells.render.listAll(result));
+            if (inst && sv.ctx) {
+                $('#results').empty().append(spells.render.listAll(result, inst));
+            } else {
+                $('#results').empty().append(spells.render.listAll(result));
+            }
         } else {
             $('#results').empty().wiki('No spells match the criteria.');
         }
@@ -199,10 +214,100 @@ var $search = $(document.createElement('input'))
 
 $('#bottom-bar').append($search).hide();
 
-postdisplay['show-search-bar'] = function (t) {
+/* side options */
+
+var $addAll = $(document.createElement('button')) 
+    .attr('id', 'add-all')
+    .addClass('closed')
+    .wiki('Add all.')
+    .ariaClick({ label : 'Add all currently shown spells to a list.' }, function () {
+        var st = State.temporary,
+            sv = State.variables,
+            inst, mainList, list,
+            spellsToAdd;
+        if (sv.ctx) {
+            inst = SpellList.getByName(sv.ctx);
+            mainList = inst.spells;
+        } else {
+            inst = null;
+            mainList = sv.results;
+        }
+        if (st.selectedSpells && Array.isArray(st.selectedSpells) && st.selectedSpells.length > 0) {
+            spellsToAdd = st.selectedSpells;
+        } else {
+            spellsToAdd = (st.filtered.length > 0) ? st.filtered : mainList;
+        }
+        
+        function addAllConfirm () {
+            return $(document.createElement('button'))
+                .addClass('dialog-confirm')
+                .attr('tabindex', '0')
+                .wiki('Confirm')
+                .ariaClick( function () {
+                    var st = State.temporary,
+                        sel = st.selected;
+                    if (sel === 'New book...') {
+                        st.bookToEdit = false;
+                        st.spellToAdd = spellsToAdd;
+                        Dialog.setup('New Spellbook', 'new-book');
+                        Dialog.wiki(Story.get('Edit').text);
+                        Dialog.open();
+                    } else {
+                        var list = SpellList.getByName(sel);
+                        Dialog.close();
+                        spellsToAdd.forEach( function (spellObj) {
+                            list.addSpell(spellObj, true);
+                        });
+                    }
+            });
+        }
+        
+        Dialog.setup('Add Spells', 'add-selection');
+        Dialog.wiki('Add all current;y displayed spells to which list?<br /><br /><<dropdown "_selected" "New book..." $listOfLists>><br /><br />');
+        Dialog.append(addAllConfirm());
+        Dialog.open();
+    }).
+    appendTo('#story');
+
+function showAddAll () {
+    $addAll.removeClass('closed');
+    $addAll.empty().wiki('Add all.');
+}
+function hideAddAll () {
+    $addAll.addClass('closed');
+}
+
+// todo: add remove all / remove selected
+
+/* checked system */
+$(document).on(':select-spell', function (e) {
+    var pool = State.temporary.selectedSpells || [], 
+        del;
+    if (e.selected) {
+        pool.push(e.spell);
+    } else {
+        del = pool.findIndex( function (spell) {
+            return e.spell.name === spell.name;
+        });
+        pool.deleteAt(del);
+    }
+    // update add all / remove all to add selected / remove selected
+    if (pool.length < 1) {
+        // add all and remove all
+        $('#add-all').empty().wiki('Add all.');
+    } else {
+        // add selected and remove selected
+        $('#add-all').empty().wiki('Add selected.');
+    }
+    State.temporary.selectedSpells = pool;
+});
+
+postdisplay['show-goodies'] = function (t) {
     if (tags().includes('list-view')) {
         $('#bottom-bar').show();
+        showAddAll();
     } else {
         $('#bottom-bar').hide();
+        hideAddAll();
     }
 };

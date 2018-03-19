@@ -13,7 +13,7 @@ ifid:b0c5ca7d-2dfd-4491-a21a-7694a83cb8e6
 <<set $listName to 'All Spells'>>\
 !!!Your Spellbooks:
 <span id='books'></span><span id='list-link'>
-<span class='w100-link'><<button [[See all of your spellbooks.|Lists]]>><</button>></span></span>
+<span class='w100-link load-list'><<button [[See all of your spellbooks.|Lists]]>><</button>></span></span>
 <<silently>>
     <<timed 40ms>>
         <<if $listOfLists.length < 1>>\
@@ -34,7 +34,7 @@ ifid:b0c5ca7d-2dfd-4491-a21a-7694a83cb8e6
 <<set _list to spells.list.randomMany(3)>>\
 <span id='random-spells'></span>
 <<run spells.render.load(false, '#random-spells', function () { return spells.render.listAll(_list); })>>\
-<span class='w100-link'><<button [[See all spells.|Results]]>><</button>></span>
+<span class='w100-link load-list'><<button [[See all spells.|Results]]>><<run $('#story').attr('data-ctx', '')>><</button>></span>
 
 :: About [dialog]
 <div id='about-main'>\

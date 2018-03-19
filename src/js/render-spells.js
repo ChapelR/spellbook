@@ -2,12 +2,21 @@ function createSpellDescription (spellObj) {
     return "<span class='descr-type'>//" + spellObj.type.toLowerCase() + "//</span><br /><div class='descr-heading'><br />''Casting Time:'' " + spellObj.casting_time + "<br />''Range:'' " + spellObj.range + "<br />''Classes:'' " + spellObj.classes.join(', ') + "<br />''Components:'' " + spellObj.components.raw + "<br />''Duration:'' " + spellObj.duration + " <br /></div><div class='descr-main'><br />" + spellObj.description + "<br />" + ((spellObj.hasOwnProperty('higher_levels')) ? ('<br />' + spellObj.higher_levels + '<br />') : '') + "</div>";
 }
 
-function createSpellDescriptionLink (spellObj, el) {
-    return el
+function createSpellDescriptionLink (spellObj, $el) {
+    return $el
         .attr('tabindex', '0')
         .ariaClick({ label : 'View spell description.' }, function (e) {
             if ($(e.target).is('button')) {
                 return;
+            } else if ($(e.target).is('div.selection')) {
+                $el.toggleClass('checked');
+                $(document).trigger({
+                    type : ':select-spell',
+                    spell : spellObj,
+                    $element : $el,
+                    selected : $el.hasClass('checked') // add or remove from selection pool
+                });
+                return; // do nothing else
             }
             Dialog.setup(spellObj.name, 'spell-description');
             Dialog.wiki(spells.render.spellDescr(spellObj));
@@ -34,7 +43,10 @@ function createSpellAddLink (spellObj) {
                 } else {
                     var list = SpellList.getByName(sel);
                     Dialog.close();
-                    list.addSpell(spellObj);
+                    spells.forEach( function (spellObj) {
+                        list.addSpell('spellObj', true);
+                    });
+                    UI.alert('Added the current selection of spells to [ ' + list.name + ' ].');
                 }
             });
     }
@@ -61,24 +73,36 @@ function createSpellListing (spellObj, inst) {
     var $classes = $(document.createElement('span'))
         .append(spellObj.classes.join(', '))
         .addClass('spell-listing spell-classes');
+        
+    var $select = $(document.createElement('div'))
+        .addClass('selection');
     
     var $listing = $(document.createElement('div'))
-        .append($name, $type, $classes, (inst) ? inst.spellDeleteLink() : createSpellAddLink(spellObj))
+        .append($name, $type, $classes, createSpellAddLink(spellObj), $select)
         .addClass('spell-listing spell-wrapper');
+    
+    if (inst) {
+        $listing.append(inst.spellDeleteLink(spellObj));
+        $('#story').attr('data-ctx', inst.name);
+    } else {
+        $('#story').attr('data-ctx', '');
+    }
     
     createSpellDescriptionLink(spellObj, $listing);
     
     return $listing;
 }
 
-function renderListOfSpells (list) {
+function renderListOfSpells (list, inst) {
     list = spells.get.checkList(list);
     var $wrapper = $(document.createElement('div'))
         .addClass('spell-list-containter');
     
     list.forEach( function (spell, i, arr) {
-        $wrapper.append(createSpellListing(spell));
+        $wrapper.append(createSpellListing(spell, inst));
     });
+    
+    $(document).trigger(':render-list-start');
     
     return $wrapper;
 }
@@ -94,13 +118,16 @@ function wrapAndRender (sync, target, fn) {
             $content;
         
         // give the target the loading element
-        setup.loading.show(); // attaches to #story and covers it
+        // setup.loading.show(); // attaches to #story and covers it
         
         if (typeof fn === 'function') {
             $content = fn(); // run the function
         }
         $target.empty().append($content);
-        setTimeout(setup.loading.dismiss, 0);
+        setTimeout( function () {
+            setup.loading.dismiss();
+            $(document).trigger(':render-list-complete');
+        }, 0);
     } 
     
     if (sync) {

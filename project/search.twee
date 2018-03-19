@@ -22,7 +22,7 @@
 ''Level:''
 <<dropdown '_level' _levelList>>
 
-/%    ''Components:''
+/%    ''Exclude Components:''
 * <label>Verbal: <<checkbox '_components[0]' false true checked>></label>
 * <label>Somatic: <<checkbox '_components[1]' false true checked>></label>
 * <label>Material: <<checkbox '_components[2]' false true checked>></label>

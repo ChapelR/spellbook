@@ -2,10 +2,10 @@
 <div id='top-bar'>
     <div id='ui-buttons'>
         <span id='ui-all' class='ui-button'>
-            <span class='icon'></span>
+            <span class='icon load-list'></span>
         </span>
         <span id='ui-lists' class='ui-button'>
-            <span class='icon'></span>
+            <span class='icon load-list'></span>
         </span>
         <span id='ui-about' class='ui-core'>
             <span class='icon'></span>

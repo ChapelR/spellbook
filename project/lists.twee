@@ -34,7 +34,11 @@ Tags:
             <<run _inst.rename(_setName, _setTags)>>
         <<else>>
             <<if _spellToAdd>>
-                <<set _spell to [_spellToAdd]>>
+                <<if Array.isArray(_spellToAdd)>>
+                    <<set _spell to _spellToAdd>>
+                <<else>>
+                    <<set _spell to [_spellToAdd]>>
+                <</if>>
             <<else>>
                 <<set _spell to []>>
             <</if>>

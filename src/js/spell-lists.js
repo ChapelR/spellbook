@@ -7,7 +7,7 @@ window.SpellList = function (name, tags, spellArray) {
         this.tags = tags || [];
         this.spells = spellArray || [];
     } else {
-        return new SpellList(name, spellArray);
+        return new SpellList(name, tags, spellArray);
     }
 };
 
@@ -16,9 +16,9 @@ SpellList.is = function (inst) {
     return inst instanceof SpellList;
 };
 
-SpellList.add = function (name, spells) {
+SpellList.add = function (name, tags, spells) {
     var sv = State.variables;
-    sv.lists.push(new SpellList(name, spells));
+    sv.lists.push(new SpellList(name, tags, spells));
     sv.listOfLists.push(name);
 };
 
@@ -95,13 +95,8 @@ SpellList.prototype = {
         
         var displayName = inst.name, 
             displayTags = inst.tags.join(' ');
-        if (displayName.length > 30) {
-            displayName = displayName.substr(0, 28);
-            displayName = displayName += '...';
-        }
-        if (displayTags.length > 100) {
-            displayTags = displayTags.substr(0, 98);
-            displayTags = displayTags += '...';
+        if (displayTags.length < 1) {
+            displayTags = ' [ no tags ] ';
         }
         
         var $name = $(document.createElement('div'))
@@ -131,9 +126,9 @@ SpellList.prototype = {
                 if ($(e.target).hasClass('card-edit-btn')) {
                     return;
                 }
-                State.variables.results = inst.spells;
+                State.variables.ctx = inst.name;
                 State.variables.listName = 'Spell Book: ' + inst.name;
-                Engine.play('Results');
+                Engine.play('BookList');
             });
         
         return $card;
@@ -161,9 +156,9 @@ SpellList.prototype = {
         return ret;
     },
     
-    addSpell : function (spellObj) {       
-        if (this.hasSpell(spellObj)) {
-            UI.alert('<strong>' + spellObj.name + '</strong> is already in the [' + this.name + '] spell book.');
+    addSpell : function (spellObj, suppressError) {       
+        if (this.hasSpell(spellObj) && !suppressError) {
+            UI.alert('<strong>' + spellObj.name + '</strong> is already in the [ ' + this.name + ' ] spell book.');
             return this;
         }
         this.spells.push(spellObj);
@@ -206,6 +201,7 @@ SpellList.prototype = {
             .ariaClick( function () {
                 inst.deleteSpell(idx);
                 Dialog.close();
+                Engine.play(passage());
             });
         
         var $no = $(document.createElement('button'))
@@ -220,11 +216,12 @@ SpellList.prototype = {
         return $(document.createElement('button'))
             .addClass('spell-listing delete-link')
             .attr('tabindex', '0')
-            .wiki('Delete')
+            .wiki('Remove')
             .ariaClick({ label : 'Remove this spell from the list.' }, function () {
                 Dialog.setup('Delete Spell', 'delete-warning');
                 Dialog.wiki('Are you sure?<br /><br />');
                 Dialog.append($yes, $no);
+                Dialog.wiki('<br />');
                 Dialog.open();
             });
     },
@@ -234,12 +231,13 @@ SpellList.prototype = {
     },
     
     renderList : function () {
-        var list = this.spells,
+        var inst = this,
+            list = inst.spells,
             $wrapper = $(document.createElement('div'))
                 .addClass('spell-list-containter');
         
         list.forEach( function (spell, i, arr) {
-            $wrapper.append(spellListing(i));
+            $wrapper.append(inst.spellListing(i));
         });
         
         return $wrapper;

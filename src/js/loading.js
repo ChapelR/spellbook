@@ -19,3 +19,5 @@ setup.loading = {
     show : showLoader,
     dismiss : hideLoader
 };
+
+$(document).on('click', 'load-list', setup.loading.show);

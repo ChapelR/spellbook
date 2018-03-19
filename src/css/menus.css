@@ -9,7 +9,10 @@
     font-size: 130%;
     font-weight: bold;
     display: inline-block;
-    margin-bottom: 0.7em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 80%;
 }
 
 #menu-icon {

@@ -1,11 +1,18 @@
 #loader {
+    position: absolute !important;
+    margin: auto !important;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 10em 0;
     z-index: 20;
     height: 100%;
     width: 100%;
+    background: #fff;
 }
 
 .sk-fading-circle {
-  margin: 100px auto;
+  margin: 2em auto;
   width: 40px;
   height: 40px;
   position: relative;
