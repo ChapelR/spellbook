@@ -220,7 +220,7 @@ var $addAll = $(document.createElement('button'))
     .attr('id', 'add-all')
     .addClass('closed')
     .wiki('Add all.')
-    .ariaClick({ label : 'Add all currently shown spells to a list.' }, function () {
+    .ariaClick({ label : 'Add all the selected spells to a list.' }, function () {
         var st = State.temporary,
             sv = State.variables,
             inst, mainList, list,
@@ -263,18 +263,68 @@ var $addAll = $(document.createElement('button'))
         }
         
         Dialog.setup('Add Spells', 'add-selection');
-        Dialog.wiki('Add all current;y displayed spells to which list?<br /><br /><<dropdown "_selected" "New book..." $listOfLists>><br /><br />');
+        Dialog.wiki('Add all of these spells to which list?<br /><br /><<dropdown "_selected" "New book..." $listOfLists>><br /><br />');
         Dialog.append(addAllConfirm());
         Dialog.open();
-    }).
-    appendTo('#story');
+    })
+    .appendTo('#story');
 
-function showAddAll () {
+var $removeAll = $(document.createElement('button')) 
+    .attr('id', 'remove-all')
+    .addClass('closed')
+    .wiki('Remove all.')
+    .ariaClick({ label : 'Remove all the selected spells from this list.' }, function () {
+        var st = State.temporary,
+            sv = State.variables,
+            inst, mainList, list,
+            spellsToRemove;
+        if (sv.ctx) {
+            inst = SpellList.getByName(sv.ctx);
+            mainList = inst.spells;
+        } else {
+            inst = null;
+            mainList = sv.results;
+        }
+        if (st.selectedSpells && Array.isArray(st.selectedSpells) && st.selectedSpells.length > 0) {
+            spellsToRemove = st.selectedSpells;
+        } else {
+            spellsToRemove = (st.filtered.length > 0) ? st.filtered : mainList;
+        }
+        
+        function removeAllConfirm () {
+            return $(document.createElement('button'))
+                .addClass('dialog-confirm')
+                .attr('tabindex', '0')
+                .wiki('Confirm')
+                .ariaClick( function () {
+                    var sv = State.variables,
+                        list = SpellList.getByName(sv.ctx);
+                    spellsToRemove.forEach( function (spellObj) {
+                        list.deleteSpell(spellObj);
+                    });
+                    Dialog.close();
+                    Engine.play(passage());
+            });
+        }
+        
+        Dialog.setup('Remove Spells', 'remove-selection');
+        Dialog.wiki('Remove all of the selected spells from the list?<br /><br />');
+        Dialog.append(removeAllConfirm());
+        Dialog.open();
+    })
+    .appendTo('#story');
+
+function showControls () {
     $addAll.removeClass('closed');
     $addAll.empty().wiki('Add all.');
+    if (State.variables.ctx) {
+        $removeAll.removeClass('closed');
+        $removeAll.empty().wiki('Remove all.');
+    }
 }
-function hideAddAll () {
+function hideControls () {
     $addAll.addClass('closed');
+    $removeAll.addClass('closed');
 }
 
 // todo: add remove all / remove selected
@@ -294,10 +344,12 @@ $(document).on(':select-spell', function (e) {
     // update add all / remove all to add selected / remove selected
     if (pool.length < 1) {
         // add all and remove all
-        $('#add-all').empty().wiki('Add all.');
+        $addAll.empty().wiki('Add all.');
+        $removeAll.empty().wiki('Remove all.');
     } else {
         // add selected and remove selected
-        $('#add-all').empty().wiki('Add selected.');
+        $addAll.empty().wiki('Add selected.');
+        $removeAll.empty().wiki('Remove selected.');
     }
     State.temporary.selectedSpells = pool;
 });
@@ -305,9 +357,9 @@ $(document).on(':select-spell', function (e) {
 postdisplay['show-goodies'] = function (t) {
     if (tags().includes('list-view')) {
         $('#bottom-bar').show();
-        showAddAll();
+        showControls();
     } else {
         $('#bottom-bar').hide();
-        hideAddAll();
+        hideControls();
     }
 };

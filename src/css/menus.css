@@ -50,3 +50,17 @@
 #search:focus {
     color: #111;
 }
+
+#header-body-reset-app h2 {
+    visibility: hidden;
+}
+
+#reset-button {
+    background-color: #c33;
+    border-color: #c11;
+    width: 100%;
+}
+#reset-button:hover {
+    background-color: #c55;
+    border-color: #c00;
+}

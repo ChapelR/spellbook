@@ -69,22 +69,39 @@ button#add-all, button#remove-all {
     display: block;
     position: fixed;
     z-index: 15;
-    right: 0; top: 8em;
+    right: 0;
     min-width: 10em;
     max-width: 10em;
 }
+button#add-all {
+    top: 7em;
+}
+button#remove-all {
+    top: 9em;
+}
+
 button#add-all.closed, button#remove-all.closed {
     display: none;
 }
 
 html.light button#add-all, button#add-all, html.light button#remove-all, button#remove-all {
     border-right: 0 !important;
-    background-color: #c11 !important;
-    border-color: #c33 !important;
+    opacity: 0.8;
 }
+button#add-all, button#remove-all {
+    background-color: #eee !important;
+    border-color: #111 !important;
+    color: #111;
+}
+html.light button#add-all, html.light button#remove-all {
+    background-color: #111 !important;
+    border-color: #eee !important;
+}
+
 html.light button#add-all:hover, button#add-all:hover, html.light button#remove-all:hover, button#remove-all:hover {
     background-color: #c55 !important;
-    border-color: #c00 !important;
+    border-color: #eee !important;
+    opacity: 1;
 }
 
 html.light .spell-wrapper {
