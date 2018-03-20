@@ -41,7 +41,7 @@ function exportSpellbook (list /* name or object */) {
     }
     
     try {
-        compressList(stringifyList(wrapUp(list)));
+        return compressList(stringifyList(wrapUp(list)));
     } catch (e) {
         console.error(e);
         UI.alert('Something went wrong.  Error code: [duck].');
@@ -51,7 +51,7 @@ function exportSpellbook (list /* name or object */) {
 
 function decompressList (data) {
     try {
-        return LZString.decompressToBase64(data);
+        return LZString.decompressFromBase64(data);
     } catch (e) {
         console.error(e);
         UI.alert('Something went wrong.  Error code: [fox].');
@@ -69,7 +69,7 @@ function parseList (json) {
 
 function reconfigure (obj) {
     try {
-        SpellList.add(obj.n, obj.t.split(' '), obj.s);
+        return SpellList.add(obj.n, obj.t.split(' '), obj.s);
     } catch (e) {
         console.error(e);
         UI.alert('Something went wrong.  Error code: [horse].');
@@ -78,14 +78,58 @@ function reconfigure (obj) {
 
 function importSpellbook (data /* string */) {
     if (typeof data !== 'string') {
-        UI.alert('Something went wrong.  Error code: [elephant].')
+        UI.alert('Something went wrong.  Error code: [elephant].');
         return;
     }
+    
     try {
-        reconfigure(parseList(decompressList));
+        return reconfigure(parseList(decompressList(data)));
     } catch (e) {
         console.error(e);
         UI.alert('Something went wrong.  Error code: [iguana].');
+    }
+}
+
+function saveToFile (bookName, string) {
+    try {
+        saveName = Util.slugify(bookName) + '.spells';
+        saveAs(new Blob([string], { type : 'text/plain;charset=UTF-8'}), saveName);
+    } catch (err) {
+        console.error(err);
+        UI.alert('Something went wrong.  Error code: [jackal].');
+    }
+}
+function loadFromFile (e) {
+    try {
+        var file = e.target.files[0],
+            reader = new FileReader();
+        
+        $(reader).on('load', function (event) {
+            try {
+                var target = event.currentTarget;
+                if (!target.result) {
+                    return;
+                }
+                
+                list = SpellList.importList(target.result);
+                State.temporary.bookToEdit = list.name;
+                State.temporary.spellToAdd = false;
+                Dialog.setup('Edit Spellbook', 'edit-book');
+                Dialog.wiki(Story.get('Edit').text);
+                Dialog.open();
+                
+            } catch (err) {
+                console.error(err);
+                UI.alert('Something went wrong.  Error code: [llama].');
+            }
+            
+        });
+        
+        reader.readAsText(file);
+        
+    } catch (err) {
+        console.error(err);
+        UI.alert('Something went wrong.  Error code: [monkey].');
     }
 }
 

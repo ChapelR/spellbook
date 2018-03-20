@@ -145,7 +145,9 @@ $('#ui-restart').ariaClick({ label : 'Restart the app.' }, function () {
     UI.restart();
 });
 $('#ui-data').ariaClick({ label : 'Import and export lists.' }, function () {
-    UI.saves();
+    Dialog.setup('Share', 'share-spellbooks');
+    Dialog.wiki(Story.get('Share').text);
+    Dialog.open();
 });
 $('#ui-settings').ariaClick({ label : 'Configure settings.' }, function () {
     UI.settings();
@@ -160,7 +162,7 @@ $('#ui-lists').ariaClick({ label : 'Your spell books.' }, function () {
 });
 $('#ui-all').ariaClick({ label : 'All spells.' }, function () {
     $('#story').attr('data-ctx', '');
-    State.variables.results = spells.get.sort(spells.list);
+    setup.results = spells.get.sort(spells.list);
     State.variables.listName = 'All Spells';
     Engine.play('Results');
 });
@@ -196,7 +198,7 @@ var $search = $(document.createElement('input'))
             mainList = inst.spells;
         } else {
             inst = null;
-            mainList = sv.results;
+            mainList = setup.results;
         }
         
         list = (st.filtered.length > 0) ? st.filtered : mainList;
@@ -230,13 +232,17 @@ var $addAll = $(document.createElement('button'))
             mainList = inst.spells;
         } else {
             inst = null;
-            mainList = sv.results;
+            mainList = setup.results;
         }
         if (st.selectedSpells && Array.isArray(st.selectedSpells) && st.selectedSpells.length > 0) {
             spellsToAdd = st.selectedSpells;
         } else {
             spellsToAdd = (st.filtered.length > 0) ? st.filtered : mainList;
         }
+        
+        st.listsToShow = sv.listOfLists.filter( function (listName) {
+            return listName !== sv.ctx;
+        });
         
         function addAllConfirm () {
             return $(document.createElement('button'))
@@ -263,7 +269,7 @@ var $addAll = $(document.createElement('button'))
         }
         
         Dialog.setup('Add Spells', 'add-selection');
-        Dialog.wiki('Add all of these spells to which list?<br /><br /><<dropdown "_selected" "New book..." $listOfLists>><br /><br />');
+        Dialog.wiki('Add all of these spells to which list?<br /><br /><<dropdown "_selected" "New book..." _listsToShow>><br /><br />');
         Dialog.append(addAllConfirm());
         Dialog.open();
     })
@@ -276,15 +282,16 @@ var $removeAll = $(document.createElement('button'))
     .ariaClick({ label : 'Remove all the selected spells from this list.' }, function () {
         var st = State.temporary,
             sv = State.variables,
-            inst, mainList, list,
+            inst, mainList,
             spellsToRemove;
         if (sv.ctx) {
             inst = SpellList.getByName(sv.ctx);
             mainList = inst.spells;
         } else {
             inst = null;
-            mainList = sv.results;
+            mainList = setup.results;
         }
+        
         if (st.selectedSpells && Array.isArray(st.selectedSpells) && st.selectedSpells.length > 0) {
             spellsToRemove = st.selectedSpells;
         } else {
@@ -297,10 +304,8 @@ var $removeAll = $(document.createElement('button'))
                 .attr('tabindex', '0')
                 .wiki('Confirm')
                 .ariaClick( function () {
-                    var sv = State.variables,
-                        list = SpellList.getByName(sv.ctx);
                     spellsToRemove.forEach( function (spellObj) {
-                        list.deleteSpell(spellObj);
+                        inst.deleteSpell(spellObj);
                     });
                     Dialog.close();
                     Engine.play(passage());
@@ -308,7 +313,7 @@ var $removeAll = $(document.createElement('button'))
         }
         
         Dialog.setup('Remove Spells', 'remove-selection');
-        Dialog.wiki('Remove all of the selected spells from the list?<br /><br />');
+        Dialog.wiki('Remove all of these spells from the list?<br /><br />');
         Dialog.append(removeAllConfirm());
         Dialog.open();
     })
@@ -318,8 +323,8 @@ function showControls () {
     $addAll.removeClass('closed');
     $addAll.empty().wiki('Add all.');
     if (State.variables.ctx) {
-        $removeAll.removeClass('closed');
-        $removeAll.empty().wiki('Remove all.');
+        //$removeAll.removeClass('closed');
+        //$removeAll.empty().wiki('Remove all.');
     }
 }
 function hideControls () {

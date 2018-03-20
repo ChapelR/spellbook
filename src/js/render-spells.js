@@ -43,10 +43,10 @@ function createSpellAddLink (spellObj) {
                 } else {
                     var list = SpellList.getByName(sel);
                     Dialog.close();
-                    spells.forEach( function (spellObj) {
-                        list.addSpell('spellObj', true);
-                    });
-                    UI.alert('Added the current selection of spells to [ ' + list.name + ' ].');
+                    var check = list.addSpell(spellObj);
+                    if (check) { 
+                        UI.alert('Added the ' + spellObj.name + ' to [' + list.name + '].');
+                    }
                 }
             });
     }

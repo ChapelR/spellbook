@@ -5,8 +5,8 @@
 <span id='menu-heading'>@@#menu-icon;[img[assets/images/all.svg]]@@ @@#menu-text;$listName@@</span>
 <span id='results'></span>
 <<nobr>>
-    <<if $results.length > 0>>
-        <<run spells.render.load(false, '#results', function () { return spells.render.listAll($results); })>>
+    <<if setup.results.length > 0>>
+        <<run spells.render.load(false, '#results', function () { return spells.render.listAll(setup.results); })>>
     <<else>>
         <<timed 40ms>>
             <<replace '#results'>>No spells match the criteria.<</replace>>
@@ -64,7 +64,7 @@
     <<if $ctx>>
         <<set _filtered to clone(_list.spells)>>
     <<else>>
-        <<set _filtered to clone($results)>>
+        <<set _filtered to clone(setup.results)>>
     <</if>>
     <<set _level to _levelList.indexOf(_level) - 1>>
     <<if _level >= 0>>

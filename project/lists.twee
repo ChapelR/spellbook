@@ -20,10 +20,29 @@ Name:
 
 Tags: 
 <<textarea '_setTags' _defaults.tags>>
-
-<span id='enter-link'><<button 'Confirm'>>
-    <<if !_setName.trim()>>
+<<if _bookToEdit>>\
+<span id='delete-button'><<button `'Delete [' + _defaults.name + ']'`>>
+    <<dialog 'Are you sure?'>>
+        Are you sure you want to delete <<= _defaults.name>>?
+        
+        @@float:right;<<button 'Yes'>>
+            <<run SpellList.del(_bookToEdit)>>
+            <<run Dialog.close()>>
+            <<run Engine.play(passage())>>
+        <</button>>@@@@float:left;<<button 'No'>>
+            <<popup 'Edit' 'Edit Spellbook' 'edit-book'>>
+        <</button>>@@
+    <</dialog>>
+<</button>></span>\
+<</if>>
+<span id='enter-link' class='confirm-button'><<button 'Confirm'>>
+    <<set _setName to _setName.trim()>>
+    <<if !_setName>>
         <<replace '#errors'>>//Please enter a name.//<</replace>>
+    <<elseif _bookToEdit && _setName !== _inst.name && $listOfLists.includes(_setName)>>
+        <<replace '#errors'>>//That name is already in use.//<</replace>>
+    <<elseif !_bookToEdit && $listOfLists.includes(_setName)>>
+        <<replace '#errors'>>//That name is already in use.//<</replace>>
     <<else>>
         <<if _setTags && _setTags.trim()>>
             <<set _setTags to _setTags.trim().split(' ')>>
@@ -44,7 +63,11 @@ Tags:
             <</if>>
             <<run SpellList.add(_setName, _setTags, _spell)>>
         <</if>>
-        <<run Engine.play(passage()), Dialog.close()>>
+        <<run Dialog.close()>>
+        <<if passage() === 'Lists' || passage() === 'Start'>>
+            /% no need to force refresh in spell lists %/
+            <<run Engine.play(passage())>>
+        <</if>>
     <</if>>
 <</button>></span>
 <span id='errors'></span>

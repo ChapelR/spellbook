@@ -15,7 +15,10 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "gulpfile.js"
+    "test": "gulp lint",
+    "lint": "gulp lint",
+    "build": "gulp build && tweego --head=src\HEAD.html -o dist\index.html project",
+    "minify": "gulp build"
   },
   "repository": {
     "type": "git",
@@ -29,7 +32,7 @@
     "rpg"
   ],
   "author": "Chapel",
-  "license": "ISC",
+  "license": "Unlicense",
   "bugs": {
     "url": "https://github.com/ChapelR/spellbook/issues"
   },

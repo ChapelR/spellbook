@@ -35,6 +35,7 @@ function resetApp () {
         .wiki('Yes')
         .ariaClick( function () {
             Dialog.close();
+            Save.autosave.delete();
             Engine.restart();
         });
     
@@ -48,10 +49,10 @@ function resetApp () {
         });
     
     Dialog.setup('Are you sure?', 'reset-app');
-    Dialog.wiki('Resetting the app will clear all data and spellbooks.<br /><br />Continue?<br /><br />')
-    Dialog.append($yes, $no)
+    Dialog.wiki('Resetting the app will clear all data and spellbooks.<br /><br />Continue?<br /><br />');
+    Dialog.append($yes, $no);
     Dialog.open();
-};
+}
 
 /* setting definitions */
 

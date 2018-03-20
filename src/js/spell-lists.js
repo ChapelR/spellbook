@@ -20,6 +20,7 @@ SpellList.add = function (name, tags, spells) {
     var sv = State.variables;
     sv.lists.push(new SpellList(name, tags, spells));
     sv.listOfLists.push(name);
+    return sv.lists[sv.lists.length - 1]; // return the spellbook
 };
 
 SpellList.getByName = function (name, includeIndex) {
@@ -86,6 +87,11 @@ SpellList.update = function (el, list) {
         // for when search is added
         return SpellList.listify(list);
     });
+};
+
+SpellList.importList = function (enc) {
+    // to get it into your app
+    return setup.share.importFromString(enc);
 };
 
 SpellList.prototype = {
@@ -157,12 +163,14 @@ SpellList.prototype = {
     },
     
     addSpell : function (spellObj, suppressError) {       
-        if (this.hasSpell(spellObj) && !suppressError) {
-            UI.alert('<strong>' + spellObj.name + '</strong> is already in the [ ' + this.name + ' ] spell book.');
-            return this;
+        if (this.hasSpell(spellObj)) {
+            if (!suppressError) {
+                UI.alert('<strong>' + spellObj.name + '</strong> is already in the [' + this.name + '] spell book.');
+            }
+            return false;
         }
         this.spells.push(spellObj);
-        return this;
+        return true;
     },
     
     deleteSpell : function (i /* index or object */) {
@@ -170,7 +178,7 @@ SpellList.prototype = {
             this.spells.deleteAt(i);
             return this;
         }
-        if (typeof i === 'object' && i.hasOwnProperty('school')) {
+        if (typeof i === 'object') {
             var del = this.spells.find( function (entry, idx) {
                 if (i.name === entry.name) {
                     return [entry, idx];
@@ -245,12 +253,7 @@ SpellList.prototype = {
     
     exportList : function () {
         // for sharing
-        return setup.exportSpellbook(this);
-    },
-    
-    importList : function () {
-        // to get it into your app
-        setup.importSpellbook(enc);
+        return setup.share.exportToString(this);
     },
     
     // for SugarCube's state system
